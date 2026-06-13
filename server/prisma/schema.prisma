@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Employee {
+  id          Int       @id @default(autoincrement())
+  fullName    String
+  position    String
+  description String    @default("")
+  photoUrl    String    @default("")
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  votes       Vote[]
+  comments    Comment[]
+}
+
+model Vote {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  type       VoteType
+  ipAddress  String
+  userAgent  String
+  createdAt  DateTime @default(now())
+
+  @@unique([employeeId, ipAddress, userAgent])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  text       String
+  ipAddress  String
+  userAgent  String
+  createdAt  DateTime @default(now())
+}
+
+enum VoteType {
+  LIKE
+  DISLIKE
+}
