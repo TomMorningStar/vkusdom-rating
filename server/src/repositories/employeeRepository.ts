@@ -28,4 +28,35 @@ export const employeeRepository = {
       orderBy: { createdAt: "desc" },
     });
   },
+
+  findAll() {
+    return prisma.employee.findMany({
+      orderBy: { fullName: "asc" },
+      include: {
+        votes: { select: { type: true } },
+      },
+    });
+  },
+
+  create(data: {
+    fullName: string;
+    position: string;
+    description: string;
+    photoUrl: string;
+  }) {
+    return prisma.employee.create({ data });
+  },
+
+  update(
+    id: number,
+    data: {
+      fullName?: string;
+      position?: string;
+      description?: string;
+      photoUrl?: string;
+      isActive?: boolean;
+    },
+  ) {
+    return prisma.employee.update({ where: { id }, data });
+  },
 };

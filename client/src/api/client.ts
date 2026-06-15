@@ -1,4 +1,5 @@
 import type { ApiError, ApiSuccess } from "../types";
+import { getAuthHeader } from "./auth";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 
@@ -9,10 +10,28 @@ export class ApiRequestError extends Error {
   }
 }
 
-export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+type FetchOptions = RequestInit & {
+  auth?: boolean;
+};
+
+export async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
+  const { auth = true, headers: customHeaders, ...rest } = options;
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(customHeaders as Record<string, string>),
+  };
+
+  if (auth) {
+    const authHeader = getAuthHeader();
+    if (authHeader) {
+      headers.Authorization = authHeader;
+    }
+  }
+
   const response = await fetch(`${API_URL}${path}`, {
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    ...options,
+    headers,
+    ...rest,
   });
 
   const json = (await response.json()) as ApiSuccess<T> | ApiError;

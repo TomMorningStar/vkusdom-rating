@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   getEmployee,
   getEmployeeComments,
@@ -75,11 +75,7 @@ export function EmployeePage() {
   if (!employee) return <div className="error">Сотрудник не найден</div>;
 
   return (
-    <>
-      <Link to="/" className="muted">
-        ← К списку
-      </Link>
-
+    <div className="container" style={{ paddingTop: "1.5rem", paddingBottom: "1.5rem" }}>
       <div className={`card ${styles.profile}`}>
         <img
           src={employee.photoUrl || "https://via.placeholder.com/200"}
@@ -109,6 +105,6 @@ export function EmployeePage() {
         <h2>Комментарии</h2>
         <CommentList comments={comments} />
       </section>
-    </>
+    </div>
   );
 }
