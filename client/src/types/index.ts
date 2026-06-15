@@ -7,6 +7,11 @@ export interface EmployeeListItem {
   dislikes: number;
 }
 
+export interface AdminEmployee extends EmployeeListItem {
+  description: string;
+  isActive: boolean;
+}
+
 export interface EmployeeDetail {
   id: number;
   fullName: string;

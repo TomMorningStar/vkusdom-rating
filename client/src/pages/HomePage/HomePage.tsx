@@ -10,7 +10,7 @@ export function HomePage() {
 
   useEffect(() => {
     getEmployees()
-      .then(setEmployees)
+      .then((data) => setEmployees(data.filter((e) => e.isActive)))
       .catch((err) => setError(err instanceof Error ? err.message : "Ошибка загрузки"))
       .finally(() => setLoading(false));
   }, []);

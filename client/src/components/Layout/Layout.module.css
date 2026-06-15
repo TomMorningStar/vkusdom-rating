@@ -27,3 +27,17 @@
 .nav a {
   font-weight: 500;
 }
+
+.logout {
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 500;
+  color: #2563eb;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logout:hover {
+  text-decoration: underline;
+}

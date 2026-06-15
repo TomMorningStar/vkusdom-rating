@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { employeeRepository } from "../repositories/employeeRepository";
-import { mapEmployeeDetail, mapEmployeeListItem } from "../services/employeeService";
+import { mapEmployeeDetail } from "../services/employeeService";
 import { ratingService } from "../services/voteService";
 import { voteService } from "../services/voteService";
 import { parseEmployeeId, getClientIp, getUserAgent } from "../utils/request";
@@ -14,21 +14,6 @@ export const healthController = {
 };
 
 export const employeeController = {
-  async list(_req: Request, res: Response) {
-    const employees = await employeeRepository.findAllActive();
-    sendSuccess(
-      res,
-      employees.map((e) => ({
-        id: e.id,
-        fullName: e.fullName,
-        position: e.position,
-        photoUrl: e.photoUrl,
-        likes: e.votes.filter((v) => v.type === "LIKE").length,
-        dislikes: e.votes.filter((v) => v.type === "DISLIKE").length,
-      })),
-    );
-  },
-
   async getById(req: Request, res: Response) {
     const id = parseEmployeeId(req.params.id);
     if (!id) {
