@@ -12,6 +12,8 @@ export function VoteForm({ onSubmit, disabled }: Props) {
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
 
+
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!type) return;

@@ -54,9 +54,12 @@ export const employeeRepository = {
       position?: string;
       description?: string;
       photoUrl?: string;
-      isActive?: boolean;
     },
   ) {
     return prisma.employee.update({ where: { id }, data });
+  },
+
+  delete(id: number) {
+    return prisma.employee.delete({ where: { id } });
   },
 };

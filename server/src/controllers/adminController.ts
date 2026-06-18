@@ -91,7 +91,7 @@ export const adminController = {
       return sendError(res, "Сотрудник не найден", 404);
     }
 
-    const employee = await employeeRepository.update(id, { isActive: false });
-    sendSuccess(res, employee);
+    await employeeRepository.delete(id);
+    sendSuccess(res, { id });
   },
 };
