@@ -21,7 +21,7 @@ export const voteService = {
     userAgent: string;
   }) {
     const employee = await employeeRepository.findById(params.employeeId);
-    if (!employee || !employee.isActive) {
+    if (!employee) {
       return { error: "Сотрудник не найден", status: 404 as const };
     }
 

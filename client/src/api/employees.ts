@@ -60,7 +60,7 @@ export function updateEmployee(
 }
 
 export function deleteEmployee(id: number) {
-  return apiFetch<{ id: number; isActive: boolean }>(`/api/admin/employees/${id}`, {
+  return apiFetch<{ id: number }>(`/api/admin/employees/${id}`, {
     method: "DELETE",
   });
 }

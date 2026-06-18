@@ -90,12 +90,12 @@ export function AdminPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm("Деактивировать сотрудника? QR-код перестанет работать.")) return;
+    if (!confirm("Удалить сотрудника? Все голоса и комментарии тоже будут удалены.")) return;
 
     setError("");
     try {
       await deleteEmployee(id);
-      setMessage("Сотрудник деактивирован");
+      setMessage("Сотрудник удалён");
       if (editingId === id) resetForm();
       reloadEmployees();
     } catch (err) {
@@ -162,7 +162,6 @@ export function AdminPage() {
             <tr>
               <th>ФИО</th>
               <th>Должность</th>
-              <th>Статус</th>
               <th>QR</th>
               <th></th>
             </tr>
@@ -173,26 +172,19 @@ export function AdminPage() {
                 <td>{employee.fullName}</td>
                 <td>{employee.position}</td>
                 <td>
-                  <span className={employee.isActive ? styles.active : styles.inactive}>
-                    {employee.isActive ? "Активен" : "Неактивен"}
-                  </span>
-                </td>
-                <td>
                   <code className={styles.qrLink}>/employee/{employee.id}</code>
                 </td>
                 <td className={styles.actions}>
                   <button type="button" className="btn" onClick={() => startEdit(employee)}>
                     Изменить
                   </button>
-                  {employee.isActive && (
-                    <button
-                      type="button"
-                      className={`btn ${styles.deleteBtn}`}
-                      onClick={() => handleDelete(employee.id)}
-                    >
-                      Удалить
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className={`btn ${styles.deleteBtn}`}
+                    onClick={() => handleDelete(employee.id)}
+                  >
+                    Удалить
+                  </button>
                 </td>
               </tr>
             ))}
