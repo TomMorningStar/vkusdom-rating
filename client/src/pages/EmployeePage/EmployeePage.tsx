@@ -58,31 +58,37 @@ export function EmployeePage() {
 	if (!employee) return <div className='error'>Сотрудник не найден</div>;
 
 	return (
-		<div
-			className='container'
-			style={{ paddingTop: '1.5rem', paddingBottom: '1.5rem' }}
-		>
+		<div className={`container ${styles.page}`}>
 			<div className={`card ${styles.profile}`}>
-				<img
-					src={employee.photoUrl || 'https://via.placeholder.com/200'}
-					alt={employee.fullName}
-					className={styles.photo}
-				/>
-				<div>
+				<div className={styles.photoWrap}>
+					<img
+						src={employee.photoUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSycd0HdIYXtPJpAqD9oOYvAPoVQX8YfIsANw&s'}
+						alt={employee.fullName}
+						className={styles.photo}
+					/>
+				</div>
+				<div className={styles.info}>
 					<h1 className={styles.name}>{employee.fullName}</h1>
 					<p className={styles.position}>{employee.position}</p>
-					<p>{employee.description}</p>
-					<p className={styles.stats}>
-						👍 {employee.likes} · 👎 {employee.dislikes}
-					</p>
+					{employee.description && (
+						<p className={styles.description}>{employee.description}</p>
+					)}
+					<div className={styles.stats}>
+						<span className={`${styles.statBadge} ${styles.statLike}`}>
+							👍 {employee.likes}
+						</span>
+						<span className={`${styles.statBadge} ${styles.statDislike}`}>
+							👎 {employee.dislikes}
+						</span>
+					</div>
 				</div>
 			</div>
 
 			{error && <div className='error'>{error}</div>}
 			{voteMessage && <div className='success'>{voteMessage}</div>}
 
-			<section className='card' style={{ marginTop: '1rem' }}>
-				<h2>Голосование</h2>
+			<section className={`card ${styles.section}`}>
+				<h2 className={styles.sectionTitle}>Голосование</h2>
 				<VoteForm
 					onSubmit={handleVote(
 						setError,
@@ -97,12 +103,14 @@ export function EmployeePage() {
 					disabled={voted}
 				/>
 				{voted && (
-					<p className='muted'>Вы уже проголосовали за этого сотрудника</p>
+					<p className={styles.votedNote}>
+						✅ Вы уже проголосовали за этого сотрудника
+					</p>
 				)}
 			</section>
 
-			<section className='card' style={{ marginTop: '1rem' }}>
-				<h2>Комментарии</h2>
+			<section className={`card ${styles.section}`}>
+				<h2 className={styles.sectionTitle}>Комментарии</h2>
 				<CommentList comments={comments} />
 			</section>
 		</div>

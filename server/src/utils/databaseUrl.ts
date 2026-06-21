@@ -1,7 +1,7 @@
 import type { PoolConfig } from "pg";
 
 export function getDatabaseUrl(): string {
-  const raw = process.env.DATABASE_URL_LOCAL || process.env.DATABASE_URL;
+  const raw = process.env.DATABASE_URL;
 
   if (!raw) {
     throw new Error("DATABASE_URL is not set");
@@ -10,8 +10,13 @@ export function getDatabaseUrl(): string {
   return raw;
 }
 
-function isRemoteDatabase(url: string): boolean {
-  return url.includes("render.com");
+function getPoolMax(): number {
+  const value = Number(process.env.DB_POOL_MAX);
+  return Number.isInteger(value) && value > 0 ? value : 10;
+}
+
+function shouldUseSsl(): boolean {
+  return process.env.DATABASE_SSL === "true";
 }
 
 export function getPgPoolConfig(): PoolConfig {
@@ -22,10 +27,8 @@ export function getPgPoolConfig(): PoolConfig {
     keepAlive: true,
     idleTimeoutMillis: 20_000,
     connectionTimeoutMillis: 15_000,
-    max: 5,
-    // Render закрывает долгоживущие соединения — ротируем до обрыва
-    maxUses: 4,
-    ...(isRemoteDatabase(connectionString) && {
+    max: getPoolMax(),
+    ...(shouldUseSsl() && {
       ssl: { rejectUnauthorized: false },
     }),
   };
