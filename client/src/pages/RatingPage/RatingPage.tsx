@@ -45,7 +45,7 @@ export function RatingPage() {
                 <td>
                   <Link to={`/employee/${item.id}`} className={styles.employeeLink}>
                     <img
-                      src={item.photoUrl || "https://via.placeholder.com/40"}
+                      src={item.photoUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSycd0HdIYXtPJpAqD9oOYvAPoVQX8YfIsANw&s"}
                       alt=""
                       className={styles.avatar}
                     />

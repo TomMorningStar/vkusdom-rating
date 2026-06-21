@@ -7,9 +7,10 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
-  background: #f4f6f8;
+  background: #f0f2f5;
   color: #1a1a1a;
   line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
 }
 
 a {
@@ -26,9 +27,11 @@ a:hover {
 }
 
 .container {
-  max-width: 960px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 1rem;
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
 }
 
 .page-title {
@@ -38,9 +41,9 @@ a:hover {
 
 .card {
   background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .grid {
@@ -51,19 +54,30 @@ a:hover {
 
 .btn {
   border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  padding: 0.6rem 1.25rem;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.1s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .btn:hover:not(:disabled) {
-  opacity: 0.85;
+  opacity: 0.88;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
@@ -84,22 +98,29 @@ a:hover {
 
 .btn-selected {
   outline: 3px solid #1e40af;
+  outline-offset: 1px;
 }
 
 .error {
   color: #b91c1c;
   background: #fef2f2;
+  border: 1px solid #fecaca;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
 }
 
 .success {
   color: #166534;
   background: #f0fdf4;
+  border: 1px solid #bbf7d0;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
 }
 
 .muted {
