@@ -6,6 +6,11 @@ import {
 	updateEmployee,
 } from '../../api/employees';
 import type { AdminEmployee } from '../../types';
+import {
+	downloadEmployeeQr,
+	downloadEmployeesQrZip,
+	getEmployeeQrUrl,
+} from '../../utils/qr';
 import styles from './AdminPage.module.css';
 
 const emptyForm = {
@@ -21,6 +26,7 @@ export function AdminPage() {
 	const [editingId, setEditingId] = useState<number | null>(null);
 	const [loaded, setLoaded] = useState(false);
 	const [saving, setSaving] = useState(false);
+	const [qrLoading, setQrLoading] = useState<number | 'all' | null>(null);
 	const [error, setError] = useState('');
 	const [message, setMessage] = useState('');
 
@@ -115,6 +121,38 @@ export function AdminPage() {
 		}
 	}
 
+	async function handleDownloadQr(employee: AdminEmployee) {
+		setError('');
+		setMessage('');
+		setQrLoading(employee.id);
+
+		try {
+			await downloadEmployeeQr(employee);
+		} catch (err) {
+			setError(
+				err instanceof Error ? err.message : 'Ошибка генерации QR-кода',
+			);
+		} finally {
+			setQrLoading(null);
+		}
+	}
+
+	async function handleDownloadAllQr() {
+		setError('');
+		setMessage('');
+		setQrLoading('all');
+
+		try {
+			await downloadEmployeesQrZip(employees);
+		} catch (err) {
+			setError(
+				err instanceof Error ? err.message : 'Ошибка генерации QR-кодов',
+			);
+		} finally {
+			setQrLoading(null);
+		}
+	}
+
 	if (loading) return <p>Загрузка...</p>;
 
 	return (
@@ -172,7 +210,17 @@ export function AdminPage() {
 			</section>
 
 			<section className={`card ${styles.tableSection}`}>
-				<h2>Все сотрудники</h2>
+				<div className={styles.sectionHeader}>
+					<h2>Все сотрудники</h2>
+					<button
+						type='button'
+						className='btn btn-primary'
+						disabled={!employees.length || qrLoading === 'all'}
+						onClick={handleDownloadAllQr}
+					>
+						{qrLoading === 'all' ? 'Генерация...' : 'Скачать все QR'}
+					</button>
+				</div>
 				<div className={styles.tableWrap}>
 					<table className={styles.table}>
 						<thead>
@@ -189,12 +237,25 @@ export function AdminPage() {
 									<td>{employee.fullName}</td>
 									<td>{employee.position}</td>
 									<td>
-										<code className={styles.qrLink}>
+										<a
+											className={styles.qrLink}
+											href={getEmployeeQrUrl(employee.id)}
+											target='_blank'
+											rel='noreferrer'
+										>
 											/employee/{employee.id}
-										</code>
+										</a>
 									</td>
 									<td>
 										<div className={styles.actions}>
+											<button
+												type='button'
+												className={`${styles.actionBtn} ${styles.qrBtn}`}
+												disabled={qrLoading === employee.id}
+												onClick={() => handleDownloadQr(employee)}
+											>
+												{qrLoading === employee.id ? '...' : 'QR'}
+											</button>
 											<button
 												type='button'
 												className={`${styles.actionBtn} ${styles.editBtn}`}

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { sendError } from "../utils/response";
 
 export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {

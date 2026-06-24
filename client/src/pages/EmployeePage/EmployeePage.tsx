@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { isAuthenticated } from '../../api/auth';
 import {
 	getEmployee,
 	getEmployeeComments,
@@ -15,6 +16,7 @@ export function EmployeePage() {
 	const { id } = useParams<{ id: string }>();
 	const employeeId = Number(id);
 	const isValidId = Number.isInteger(employeeId) && employeeId > 0;
+	const showAdminBackLink = isAuthenticated();
 
 	const [employee, setEmployee] = useState<EmployeeDetail | null>(null);
 	const [comments, setComments] = useState<Comment[]>([]);
@@ -59,6 +61,12 @@ export function EmployeePage() {
 
 	return (
 		<div className={`container ${styles.page}`}>
+			{showAdminBackLink && (
+				<Link to='/' className={styles.backLink}>
+					← На главный экран
+				</Link>
+			)}
+
 			<div className={`card ${styles.profile}`}>
 				<div className={styles.photoWrap}>
 					<img
