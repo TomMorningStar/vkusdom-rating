@@ -28,3 +28,5 @@ COPY docker-entrypoint.sh ./docker-entrypoint.sh
 EXPOSE 5000
 
 CMD ["sh", "docker-entrypoint.sh"]
+
+
