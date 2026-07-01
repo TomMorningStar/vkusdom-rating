@@ -1,4 +1,9 @@
 import { Request, Response } from "express";
+import {
+  deleteEmployeePhotoByUrl,
+  deleteEmployeeUploadedFile,
+  getEmployeePhotoUrl,
+} from "../middlewares/uploadEmployeePhoto";
 import { employeeRepository } from "../repositories/employeeRepository";
 import { isValidAdminCredentials } from "../utils/adminAuth";
 import { parseEmployeeId } from "../utils/request";
@@ -43,40 +48,65 @@ export const adminController = {
   async create(req: Request, res: Response) {
     const validation = validateEmployeeBody(req.body);
     if (!validation.ok) {
+      await deleteEmployeeUploadedFile(req.file);
       return sendError(res, validation.message, 400);
     }
 
-    const employee = await employeeRepository.create({
-      fullName: validation.data.fullName,
-      position: validation.data.position,
-      description: validation.data.description ?? "",
-      photoUrl: validation.data.photoUrl ?? "",
-    });
+    let employee;
+
+    try {
+      employee = await employeeRepository.create({
+        fullName: validation.data.fullName,
+        position: validation.data.position,
+        description: validation.data.description ?? "",
+        photoUrl: getEmployeePhotoUrl(req.file) ?? "",
+      });
+    } catch (err) {
+      await deleteEmployeeUploadedFile(req.file);
+      throw err;
+    }
+
     sendSuccess(res, employee, 201);
   },
 
   async update(req: Request, res: Response) {
     const id = parseEmployeeId(req.params.id);
     if (!id) {
+      await deleteEmployeeUploadedFile(req.file);
       return sendError(res, "Некорректный id сотрудника", 400);
     }
 
     const validation = validateEmployeeBody(req.body);
     if (!validation.ok) {
+      await deleteEmployeeUploadedFile(req.file);
       return sendError(res, validation.message, 400);
     }
 
     const existing = await employeeRepository.findById(id);
     if (!existing) {
+      await deleteEmployeeUploadedFile(req.file);
       return sendError(res, "Сотрудник не найден", 404);
     }
 
-    const employee = await employeeRepository.update(id, {
-      fullName: validation.data.fullName,
-      position: validation.data.position,
-      description: validation.data.description ?? "",
-      photoUrl: validation.data.photoUrl ?? "",
-    });
+    const newPhotoUrl = getEmployeePhotoUrl(req.file);
+    let employee;
+
+    try {
+      employee = await employeeRepository.update(id, {
+        fullName: validation.data.fullName,
+        position: validation.data.position,
+        description: validation.data.description ?? "",
+        photoUrl: newPhotoUrl ?? existing.photoUrl,
+      });
+    } catch (err) {
+      await deleteEmployeeUploadedFile(req.file);
+      throw err;
+    }
+
+    if (newPhotoUrl) {
+      await deleteEmployeePhotoByUrl(existing.photoUrl);
+    }
+
     sendSuccess(res, employee);
   },
 
@@ -92,6 +122,7 @@ export const adminController = {
     }
 
     await employeeRepository.delete(id);
+    await deleteEmployeePhotoByUrl(existing.photoUrl);
     sendSuccess(res, { id });
   },
 };
