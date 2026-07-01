@@ -6,6 +6,7 @@ import {
   ratingController,
 } from "../controllers/employeeController";
 import { requireAdmin } from "../middlewares/requireAdmin";
+import { uploadEmployeePhoto } from "../middlewares/uploadEmployeePhoto";
 
 export const apiRouter = Router();
 
@@ -19,8 +20,8 @@ apiRouter.post("/employees/:id/vote", employeeController.vote);
 const adminRouter = Router();
 adminRouter.use(requireAdmin);
 adminRouter.get("/employees", adminController.list);
-adminRouter.post("/employees", adminController.create);
-adminRouter.patch("/employees/:id", adminController.update);
+adminRouter.post("/employees", uploadEmployeePhoto, adminController.create);
+adminRouter.patch("/employees/:id", uploadEmployeePhoto, adminController.update);
 adminRouter.delete("/employees/:id", adminController.remove);
 adminRouter.get("/rating", ratingController.list);
 

@@ -5,6 +5,7 @@ import {
 	getEmployees,
 	updateEmployee,
 } from '../../api/employees';
+import type { EmployeeFormPayload } from '../../api/employees';
 import type { AdminEmployee } from '../../types';
 import {
 	downloadEmployeeQr,
@@ -13,17 +14,18 @@ import {
 } from '../../utils/qr';
 import styles from './AdminPage.module.css';
 
-const emptyForm = {
+const emptyForm: EmployeeFormPayload = {
 	fullName: '',
 	position: '',
 	description: '',
-	photoUrl: '',
+	photo: null,
 };
 
 export function AdminPage() {
 	const [employees, setEmployees] = useState<AdminEmployee[]>([]);
 	const [form, setForm] = useState(emptyForm);
 	const [editingId, setEditingId] = useState<number | null>(null);
+	const [fileInputKey, setFileInputKey] = useState(0);
 	const [loaded, setLoaded] = useState(false);
 	const [saving, setSaving] = useState(false);
 	const [qrLoading, setQrLoading] = useState<number | 'all' | null>(null);
@@ -65,6 +67,7 @@ export function AdminPage() {
 	function resetForm() {
 		setForm(emptyForm);
 		setEditingId(null);
+		setFileInputKey(key => key + 1);
 	}
 
 	async function handleSubmit(e: React.FormEvent) {
@@ -96,8 +99,9 @@ export function AdminPage() {
 			fullName: employee.fullName,
 			position: employee.position,
 			description: employee.description,
-			photoUrl: employee.photoUrl,
+			photo: null,
 		});
+		setFileInputKey(key => key + 1);
 		setMessage('');
 		setError('');
 	}
@@ -186,12 +190,27 @@ export function AdminPage() {
 						onChange={e => setForm({ ...form, description: e.target.value })}
 						rows={3}
 					/>
-					<input
-						className={styles.input}
-						placeholder='URL фото'
-						value={form.photoUrl}
-						onChange={e => setForm({ ...form, photoUrl: e.target.value })}
-					/>
+					<div className={styles.fileField}>
+						<label className={`btn ${styles.fileButton}`}>
+							Загрузить изображение
+							<input
+								key={fileInputKey}
+								className={styles.fileInput}
+								type='file'
+								accept='image/jpeg,image/png,image/webp'
+								onChange={e =>
+									setForm({ ...form, photo: e.target.files?.[0] ?? null })
+								}
+							/>
+						</label>
+						<span className={styles.fileName}>
+							{form.photo
+								? form.photo.name
+								: editingId
+									? 'Если не выбрать новое фото, останется текущее'
+									: 'JPG, PNG или WEBP до 5 МБ'}
+						</span>
+					</div>
 					<div className={styles.formActions}>
 						<button
 							type='submit'

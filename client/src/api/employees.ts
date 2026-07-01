@@ -32,30 +32,38 @@ export function getRating() {
   return apiFetch<RatingItem[]>("/api/admin/rating");
 }
 
-export function createEmployee(data: {
+export type EmployeeFormPayload = {
   fullName: string;
   position: string;
   description?: string;
-  photoUrl?: string;
-}) {
+  photo?: File | null;
+};
+
+function toEmployeeFormData(data: EmployeeFormPayload) {
+  const formData = new FormData();
+
+  formData.append("fullName", data.fullName);
+  formData.append("position", data.position);
+  formData.append("description", data.description ?? "");
+
+  if (data.photo) {
+    formData.append("photo", data.photo);
+  }
+
+  return formData;
+}
+
+export function createEmployee(data: EmployeeFormPayload) {
   return apiFetch<EmployeeListItem>("/api/admin/employees", {
     method: "POST",
-    body: JSON.stringify(data),
+    body: toEmployeeFormData(data),
   });
 }
 
-export function updateEmployee(
-  id: number,
-  data: {
-    fullName: string;
-    position: string;
-    description?: string;
-    photoUrl?: string;
-  },
-) {
+export function updateEmployee(id: number, data: EmployeeFormPayload) {
   return apiFetch<EmployeeListItem>(`/api/admin/employees/${id}`, {
     method: "PATCH",
-    body: JSON.stringify(data),
+    body: toEmployeeFormData(data),
   });
 }
 

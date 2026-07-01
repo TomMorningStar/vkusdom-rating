@@ -2,7 +2,6 @@ export interface EmployeeInput {
   fullName: string;
   position: string;
   description?: string;
-  photoUrl?: string;
 }
 
 export function validateEmployeeBody(
@@ -12,7 +11,7 @@ export function validateEmployeeBody(
     return { ok: false, message: "Тело запроса должно быть JSON-объектом" };
   }
 
-  const { fullName, position, description, photoUrl } = body as Record<string, unknown>;
+  const { fullName, position, description } = body as Record<string, unknown>;
 
   if (typeof fullName !== "string" || fullName.trim().length < 2) {
     return { ok: false, message: "ФИО обязательно (минимум 2 символа)" };
@@ -26,17 +25,12 @@ export function validateEmployeeBody(
     return { ok: false, message: "Описание должно быть строкой" };
   }
 
-  if (photoUrl !== undefined && photoUrl !== null && typeof photoUrl !== "string") {
-    return { ok: false, message: "photoUrl должен быть строкой" };
-  }
-
   return {
     ok: true,
     data: {
       fullName: fullName.trim(),
       position: position.trim(),
       description: typeof description === "string" ? description.trim() : "",
-      photoUrl: typeof photoUrl === "string" ? photoUrl.trim() : "",
     },
   };
 }

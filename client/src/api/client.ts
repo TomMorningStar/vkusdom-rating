@@ -16,9 +16,10 @@ type FetchOptions = RequestInit & {
 
 export async function apiFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
   const { auth = true, headers: customHeaders, ...rest } = options;
+  const isFormData = rest.body instanceof FormData;
 
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
     ...(customHeaders as Record<string, string>),
   };
 
