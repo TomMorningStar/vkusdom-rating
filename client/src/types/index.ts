@@ -30,6 +30,14 @@ export interface Comment {
   createdAt: string;
 }
 
+export interface PendingComment {
+  id: number;
+  employeeId: number;
+  employeeName: string;
+  text: string;
+  createdAt: string;
+}
+
 export interface RatingItem {
   id: number;
   fullName: string;

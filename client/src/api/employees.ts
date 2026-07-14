@@ -4,12 +4,17 @@ import type {
   Comment,
   EmployeeDetail,
   EmployeeListItem,
+  PendingComment,
   RatingItem,
   VoteType,
 } from "../types";
 
 export function getEmployees() {
   return apiFetch<AdminEmployee[]>("/api/admin/employees");
+}
+
+export function getPublicEmployees() {
+  return apiFetch<EmployeeListItem[]>("/api/employees", { auth: false });
 }
 
 export function getEmployee(id: number) {
@@ -70,5 +75,21 @@ export function updateEmployee(id: number, data: EmployeeFormPayload) {
 export function deleteEmployee(id: number) {
   return apiFetch<{ id: number }>(`/api/admin/employees/${id}`, {
     method: "DELETE",
+  });
+}
+
+export function deleteComment(id: number) {
+  return apiFetch<{ id: number }>(`/api/admin/comments/${id}`, {
+    method: "DELETE",
+  });
+}
+
+export function getPendingComments() {
+  return apiFetch<PendingComment[]>("/api/admin/comments");
+}
+
+export function approveComment(id: number) {
+  return apiFetch<Comment>(`/api/admin/comments/${id}/approve`, {
+    method: "PATCH",
   });
 }

@@ -38,6 +38,7 @@ model Comment {
   text       String
   ipAddress  String
   userAgent  String
+  isApproved Boolean  @default(false)
   createdAt  DateTime @default(now())
 }
 

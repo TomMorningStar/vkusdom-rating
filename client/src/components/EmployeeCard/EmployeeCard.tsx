@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import avatarFallback from "../../assets/avatar-alt.jpg";
 import type { EmployeeListItem } from "../../types";
 import styles from "./EmployeeCard.module.css";
 
@@ -10,7 +11,7 @@ export function EmployeeCard({ employee }: Props) {
   return (
     <Link to={`/employee/${employee.id}`} className={`card ${styles.card}`}>
       <img
-        src={employee.photoUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSycd0HdIYXtPJpAqD9oOYvAPoVQX8YfIsANw&s"}
+        src={employee.photoUrl || avatarFallback}
         alt={employee.fullName}
         className={styles.photo}
       />

@@ -9,6 +9,7 @@ import type { EmployeeFormPayload } from '../../api/employees';
 import type { AdminEmployee } from '../../types';
 import {
 	downloadEmployeeQr,
+	downloadEmployeesListQr,
 	downloadEmployeesQrZip,
 	getEmployeeQrUrl,
 } from '../../utils/qr';
@@ -28,7 +29,9 @@ export function AdminPage() {
 	const [fileInputKey, setFileInputKey] = useState(0);
 	const [loaded, setLoaded] = useState(false);
 	const [saving, setSaving] = useState(false);
-	const [qrLoading, setQrLoading] = useState<number | 'all' | null>(null);
+	const [qrLoading, setQrLoading] = useState<number | 'all' | 'list' | null>(
+		null,
+	);
 	const [error, setError] = useState('');
 	const [message, setMessage] = useState('');
 
@@ -157,6 +160,22 @@ export function AdminPage() {
 		}
 	}
 
+	async function handleDownloadListQr() {
+		setError('');
+		setMessage('');
+		setQrLoading('list');
+
+		try {
+			await downloadEmployeesListQr();
+		} catch (err) {
+			setError(
+				err instanceof Error ? err.message : 'Ошибка генерации QR-кода',
+			);
+		} finally {
+			setQrLoading(null);
+		}
+	}
+
 	if (loading) return <p>Загрузка...</p>;
 
 	return (
@@ -165,6 +184,26 @@ export function AdminPage() {
 
 			{error && <div className='error'>{error}</div>}
 			{message && <div className='success'>{message}</div>}
+
+			<section className={`card ${styles.formSection}`}>
+				<div className={styles.sectionHeader}>
+					<div>
+						<h2>QR на список сотрудников</h2>
+						<p className='muted'>
+							Ведёт на страницу со всеми сотрудниками — можно распечатать один
+							раз и повесить на видном месте.
+						</p>
+					</div>
+					<button
+						type='button'
+						className='btn btn-primary'
+						disabled={qrLoading === 'list'}
+						onClick={handleDownloadListQr}
+					>
+						{qrLoading === 'list' ? 'Генерация...' : 'Скачать QR'}
+					</button>
+				</div>
+			</section>
 
 			<section className={`card ${styles.formSection}`}>
 				<h2>{editingId ? 'Редактировать' : 'Добавить сотрудника'}</h2>

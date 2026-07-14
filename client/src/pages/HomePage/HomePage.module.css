@@ -1,0 +1,10 @@
+.page {
+  padding-top: 1.25rem;
+  padding-bottom: 3rem;
+}
+
+.logo {
+  display: block;
+  height: 48px;
+  width: auto;
+}

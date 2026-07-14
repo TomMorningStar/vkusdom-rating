@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   margin-bottom: 0.875rem;
-  color: #2563eb;
+  color: var(--brand-green);
   font-size: 0.95rem;
   font-weight: 600;
 }

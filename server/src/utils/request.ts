@@ -12,7 +12,7 @@ export function getUserAgent(req: Request): string {
   return req.headers["user-agent"] ?? "unknown";
 }
 
-export function parseEmployeeId(raw: string | string[] | undefined): number | null {
+export function parseId(raw: string | string[] | undefined): number | null {
   const value = Array.isArray(raw) ? raw[0] : raw;
   if (!value) return null;
   const id = Number(value);
