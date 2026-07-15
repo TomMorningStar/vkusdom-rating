@@ -1,0 +1,80 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ip {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-family: monospace;
+}
+
+.text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.photoLink {
+  display: inline-block;
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.photo {
+  display: block;
+  max-width: 220px;
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.userAgent {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.deleteBtn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .photo {
+    max-width: 100%;
+  }
+}

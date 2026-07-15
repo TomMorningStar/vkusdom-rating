@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { employeeRepository } from "../repositories/employeeRepository";
-import { mapEmployeeDetail } from "../services/employeeService";
+import { mapEmployeeDetail, mapEmployeeListItem } from "../services/employeeService";
 import { ratingService } from "../services/voteService";
 import { voteService } from "../services/voteService";
-import { parseEmployeeId, getClientIp, getUserAgent } from "../utils/request";
+import { parseId, getClientIp, getUserAgent } from "../utils/request";
 import { sendError, sendSuccess } from "../utils/response";
 import { validateVoteBody } from "../validators/voteValidator";
 
@@ -14,8 +14,13 @@ export const healthController = {
 };
 
 export const employeeController = {
+  async list(_req: Request, res: Response) {
+    const employees = await employeeRepository.findAllActive();
+    sendSuccess(res, employees.map(mapEmployeeListItem));
+  },
+
   async getById(req: Request, res: Response) {
-    const id = parseEmployeeId(req.params.id);
+    const id = parseId(req.params.id);
     if (!id) {
       return sendError(res, "Некорректный id сотрудника", 400);
     }
@@ -29,7 +34,7 @@ export const employeeController = {
   },
 
   async getComments(req: Request, res: Response) {
-    const id = parseEmployeeId(req.params.id);
+    const id = parseId(req.params.id);
     if (!id) {
       return sendError(res, "Некорректный id сотрудника", 400);
     }
@@ -44,7 +49,7 @@ export const employeeController = {
   },
 
   async vote(req: Request, res: Response) {
-    const id = parseEmployeeId(req.params.id);
+    const id = parseId(req.params.id);
     if (!id) {
       return sendError(res, "Некорректный id сотрудника", 400);
     }

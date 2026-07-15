@@ -7,15 +7,19 @@ import {
 } from "../controllers/employeeController";
 import { requireAdmin } from "../middlewares/requireAdmin";
 import { uploadEmployeePhoto } from "../middlewares/uploadEmployeePhoto";
+import { uploadSuggestionPhoto } from "../middlewares/uploadSuggestionPhoto";
+import { suggestionController } from "../controllers/suggestionController";
 
 export const apiRouter = Router();
 
 apiRouter.get("/health", healthController.check);
 apiRouter.post("/admin/login", authController.login);
 
+apiRouter.get("/employees", employeeController.list);
 apiRouter.get("/employees/:id", employeeController.getById);
 apiRouter.get("/employees/:id/comments", employeeController.getComments);
 apiRouter.post("/employees/:id/vote", employeeController.vote);
+apiRouter.post("/suggestions", uploadSuggestionPhoto, suggestionController.create);
 
 const adminRouter = Router();
 adminRouter.use(requireAdmin);
@@ -23,6 +27,11 @@ adminRouter.get("/employees", adminController.list);
 adminRouter.post("/employees", uploadEmployeePhoto, adminController.create);
 adminRouter.patch("/employees/:id", uploadEmployeePhoto, adminController.update);
 adminRouter.delete("/employees/:id", adminController.remove);
+adminRouter.get("/comments", adminController.listPendingComments);
+adminRouter.patch("/comments/:id/approve", adminController.approveComment);
+adminRouter.delete("/comments/:id", adminController.removeComment);
+adminRouter.get("/suggestions", adminController.listSuggestions);
+adminRouter.delete("/suggestions/:id", adminController.removeSuggestion);
 adminRouter.get("/rating", ratingController.list);
 
 apiRouter.use("/admin", adminRouter);

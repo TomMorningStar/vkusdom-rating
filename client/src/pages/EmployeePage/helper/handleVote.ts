@@ -30,7 +30,11 @@ export function handleVote(
 					: prev,
 			);
 			setVoted(true);
-			setVoteMessage('Голос учтён!');
+			setVoteMessage(
+				comment
+					? 'Голос учтён! Комментарий появится после проверки модератором.'
+					: 'Голос учтён!',
+			);
 			if (comment) {
 				const comms = await getEmployeeComments(employeeId);
 				setComments(comms);

@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { isAuthenticated } from '../../api/auth';
 import {
+	deleteComment,
 	getEmployee,
 	getEmployeeComments,
 	voteForEmployee,
 } from '../../api/employees';
+import avatarFallback from '../../assets/avatar-alt.jpg';
 import { CommentList } from '../../components/CommentList';
 import { VoteForm } from '../../components/VoteForm';
 import type { Comment, EmployeeDetail } from '../../types';
@@ -53,6 +55,19 @@ export function EmployeePage() {
 		};
 	}, [employeeId, isValidId]);
 
+	async function handleDeleteComment(commentId: number) {
+		if (!confirm('Удалить комментарий?')) return;
+
+		try {
+			await deleteComment(commentId);
+			setComments(prev => prev.filter(c => c.id !== commentId));
+		} catch (err) {
+			setError(
+				err instanceof Error ? err.message : 'Ошибка удаления комментария',
+			);
+		}
+	}
+
 	if (!isValidId)
 		return <div className='error'>Некорректный id сотрудника</div>;
 	if (loading) return <p>Загрузка...</p>;
@@ -70,7 +85,7 @@ export function EmployeePage() {
 			<div className={`card ${styles.profile}`}>
 				<div className={styles.photoWrap}>
 					<img
-						src={employee.photoUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSycd0HdIYXtPJpAqD9oOYvAPoVQX8YfIsANw&s'}
+						src={employee.photoUrl || avatarFallback}
 						alt={employee.fullName}
 						className={styles.photo}
 					/>
@@ -119,7 +134,10 @@ export function EmployeePage() {
 
 			<section className={`card ${styles.section}`}>
 				<h2 className={styles.sectionTitle}>Комментарии</h2>
-				<CommentList comments={comments} />
+				<CommentList
+					comments={comments}
+					onDelete={showAdminBackLink ? handleDeleteComment : undefined}
+				/>
 			</section>
 		</div>
 	);

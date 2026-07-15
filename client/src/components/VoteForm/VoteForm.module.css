@@ -37,6 +37,18 @@
   cursor: not-allowed;
 }
 
+@media (max-width: 340px) {
+  .voteButtons {
+    gap: 0.4rem;
+  }
+
+  .voteBtn {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.4rem;
+    min-height: 48px;
+  }
+}
+
 .voteBtnLike {
   background: #f0fdf4;
   color: #15803d;
@@ -95,8 +107,8 @@
 
 .textarea:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(10, 59, 36, 0.12);
   background: #fff;
 }
 
@@ -113,7 +125,7 @@
   font-weight: 600;
   border-radius: 12px;
   border: none;
-  background: #2563eb;
+  background: var(--brand-green);
   color: #fff;
   cursor: pointer;
   transition: background 0.15s, opacity 0.15s, transform 0.1s;
@@ -122,7 +134,7 @@
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: var(--brand-green-deep);
 }
 
 .submitBtn:active:not(:disabled) {

@@ -4,9 +4,12 @@ import {
   deleteEmployeeUploadedFile,
   getEmployeePhotoUrl,
 } from "../middlewares/uploadEmployeePhoto";
+import { deleteSuggestionPhotoByUrl } from "../middlewares/uploadSuggestionPhoto";
+import { commentRepository } from "../repositories/commentRepository";
 import { employeeRepository } from "../repositories/employeeRepository";
+import { suggestionRepository } from "../repositories/suggestionRepository";
 import { isValidAdminCredentials } from "../utils/adminAuth";
-import { parseEmployeeId } from "../utils/request";
+import { parseId } from "../utils/request";
 import { sendError, sendSuccess } from "../utils/response";
 import { validateEmployeeBody, validateLoginBody } from "../validators/employeeValidator";
 
@@ -70,7 +73,7 @@ export const adminController = {
   },
 
   async update(req: Request, res: Response) {
-    const id = parseEmployeeId(req.params.id);
+    const id = parseId(req.params.id);
     if (!id) {
       await deleteEmployeeUploadedFile(req.file);
       return sendError(res, "Некорректный id сотрудника", 400);
@@ -111,7 +114,7 @@ export const adminController = {
   },
 
   async remove(req: Request, res: Response) {
-    const id = parseEmployeeId(req.params.id);
+    const id = parseId(req.params.id);
     if (!id) {
       return sendError(res, "Некорректный id сотрудника", 400);
     }
@@ -123,6 +126,74 @@ export const adminController = {
 
     await employeeRepository.delete(id);
     await deleteEmployeePhotoByUrl(existing.photoUrl);
+    sendSuccess(res, { id });
+  },
+
+  async removeComment(req: Request, res: Response) {
+    const id = parseId(req.params.id);
+    if (!id) {
+      return sendError(res, "Некорректный id комментария", 400);
+    }
+
+    const existing = await commentRepository.findById(id);
+    if (!existing) {
+      return sendError(res, "Комментарий не найден", 404);
+    }
+
+    await commentRepository.delete(id);
+    sendSuccess(res, { id });
+  },
+
+  async listPendingComments(_req: Request, res: Response) {
+    const comments = await commentRepository.findPending();
+    sendSuccess(
+      res,
+      comments.map((c) => ({
+        id: c.id,
+        employeeId: c.employeeId,
+        employeeName: c.employee.fullName,
+        text: c.text,
+        createdAt: c.createdAt,
+      })),
+    );
+  },
+
+  async approveComment(req: Request, res: Response) {
+    const id = parseId(req.params.id);
+    if (!id) {
+      return sendError(res, "Некорректный id комментария", 400);
+    }
+
+    const existing = await commentRepository.findById(id);
+    if (!existing) {
+      return sendError(res, "Комментарий не найден", 404);
+    }
+
+    const comment = await commentRepository.approve(id);
+    sendSuccess(res, comment);
+  },
+
+  async listSuggestions(_req: Request, res: Response) {
+    const suggestions = await suggestionRepository.findAll();
+    sendSuccess(res, suggestions);
+  },
+
+  async removeSuggestion(req: Request, res: Response) {
+    const id = parseId(req.params.id);
+    if (!id) {
+      return sendError(res, "Некорректный id предложения", 400);
+    }
+
+    const existing = await suggestionRepository.findById(id);
+    if (!existing) {
+      return sendError(res, "Предложение не найдено", 404);
+    }
+
+    await suggestionRepository.delete(id);
+    if (existing.photoUrl) {
+      await deleteSuggestionPhotoByUrl(existing.photoUrl);
+    }
+
     sendSuccess(res, { id });
   },
 };

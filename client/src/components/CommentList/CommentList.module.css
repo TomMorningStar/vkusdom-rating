@@ -21,3 +21,25 @@
   color: #1f2937;
   word-break: break-word;
 }
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.deleteBtn {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8rem;
+  color: #b91c1c;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deleteBtn:hover {
+  text-decoration: underline;
+}

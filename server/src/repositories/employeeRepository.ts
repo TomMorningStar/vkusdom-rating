@@ -6,7 +6,7 @@ export const employeeRepository = {
       where: { isActive: true },
       orderBy: { fullName: "asc" },
       include: {
-        _count: { select: { votes: true, comments: true } },
+        _count: { select: { votes: true, comments: { where: { isApproved: true } } } },
         votes: { select: { type: true } },
       },
     });
@@ -24,7 +24,7 @@ export const employeeRepository = {
 
   findComments(employeeId: number) {
     return prisma.comment.findMany({
-      where: { employeeId },
+      where: { employeeId, isApproved: true },
       orderBy: { createdAt: "desc" },
     });
   },

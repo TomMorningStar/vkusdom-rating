@@ -25,6 +25,10 @@ export function getEmployeeQrUrl(employeeId: number) {
 	return `${getAppOrigin()}/employee/${employeeId}`;
 }
 
+export function getEmployeesListUrl() {
+	return `${getAppOrigin()}/`;
+}
+
 function sanitizeFilename(value: string) {
 	return value
 		.trim()
@@ -84,8 +88,7 @@ function drawCenteredText(
 	});
 }
 
-export async function createEmployeeQrBlob(employee: EmployeeQrData) {
-	const url = getEmployeeQrUrl(employee.id);
+async function createQrCardBlob(url: string, label: string) {
 	const qrDataUrl = await QRCode.toDataURL(url, {
 		errorCorrectionLevel: 'H',
 		margin: 2,
@@ -117,9 +120,17 @@ export async function createEmployeeQrBlob(employee: EmployeeQrData) {
 	ctx.textAlign = 'center';
 	ctx.fillStyle = '#111827';
 	ctx.font = '700 48px system-ui, -apple-system, BlinkMacSystemFont, sans-serif';
-	drawCenteredText(ctx, employee.fullName, 820, CARD_WIDTH - PADDING * 2, 58);
+	drawCenteredText(ctx, label, 820, CARD_WIDTH - PADDING * 2, 58);
 
 	return canvasToBlob(canvas);
+}
+
+export function createEmployeeQrBlob(employee: EmployeeQrData) {
+	return createQrCardBlob(getEmployeeQrUrl(employee.id), employee.fullName);
+}
+
+export function createEmployeesListQrBlob(label = 'Сотрудники ВкусДом') {
+	return createQrCardBlob(getEmployeesListUrl(), label);
 }
 
 export function getEmployeeQrFilename(employee: EmployeeQrData) {
@@ -142,6 +153,11 @@ export async function downloadEmployeesQrZip(employees: EmployeeQrData[]) {
 
 	const archive = await zip.generateAsync({ type: 'blob' });
 	downloadBlob(archive, 'employee-qr-codes.zip');
+}
+
+export async function downloadEmployeesListQr() {
+	const blob = await createEmployeesListQrBlob();
+	downloadBlob(blob, 'qr-employees-list.png');
 }
 
 function downloadBlob(blob: Blob, filename: string) {

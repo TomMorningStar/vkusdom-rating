@@ -1,0 +1,48 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.employeeLink {
+  font-weight: 600;
+  color: var(--brand-green);
+}
+
+.text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.deleteBtn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #fff;
+}

@@ -1,0 +1,106 @@
+.page {
+  padding-top: 1.25rem;
+  padding-bottom: 3rem;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 500px) {
+  .header {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  background: #f9fafb;
+  color: #16241c;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  -webkit-appearance: none;
+}
+
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(10, 59, 36, 0.12);
+  background: #fff;
+}
+
+.textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fileField {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.fileButton {
+  cursor: pointer;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileHint {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.previewWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.preview {
+  display: block;
+  max-width: 100%;
+  max-height: 260px;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  object-fit: contain;
+}
+
+.previewActions {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.removeBtn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.removeBtn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #fff;
+}

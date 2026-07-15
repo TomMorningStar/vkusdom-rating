@@ -12,7 +12,7 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   if (isAuthenticated()) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/admin" replace />;
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,7 +23,7 @@ export function LoginPage() {
     try {
       await login(loginValue, password);
       setCredentials(loginValue, password);
-      navigate("/");
+      navigate("/admin");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка входа");
     } finally {

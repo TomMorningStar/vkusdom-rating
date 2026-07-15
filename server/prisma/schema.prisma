@@ -38,7 +38,17 @@ model Comment {
   text       String
   ipAddress  String
   userAgent  String
+  isApproved Boolean  @default(false)
   createdAt  DateTime @default(now())
+}
+
+model Suggestion {
+  id        Int      @id @default(autoincrement())
+  text      String
+  photoUrl  String   @default("")
+  ipAddress String
+  userAgent String
+  createdAt DateTime @default(now())
 }
 
 enum VoteType {
