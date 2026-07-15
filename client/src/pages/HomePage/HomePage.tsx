@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { isAuthenticated } from "../../api/auth";
 import { getPublicEmployees } from "../../api/employees";
-import logo from "../../assets/Logo.png";
+import { BrandLogo } from "../../components/BrandLogo";
 import { EmployeeCard } from "../../components/EmployeeCard";
 import { Header } from "../../components/Header";
 import type { EmployeeListItem } from "../../types";
@@ -28,8 +29,13 @@ export function HomePage() {
         {!loading && error && <div className="error">{error}</div>}
         {!loading && !error && (
           <>
-            <img src={logo} alt="ВкусДом" className={styles.logo} />
-            <p className="muted">Выберите сотрудника из списка</p>
+            <div className={styles.header}>
+              <BrandLogo />
+            </div>
+            <p className="muted">
+              Выберите сотрудника из списка чтобы оставить свой отзыв или{" "}
+              <Link to="/suggestions">оставить предложение</Link>
+            </p>
             <div className="grid">
               {employees.map((employee) => (
                 <EmployeeCard key={employee.id} employee={employee} />

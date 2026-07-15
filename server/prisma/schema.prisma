@@ -42,6 +42,14 @@ model Comment {
   createdAt  DateTime @default(now())
 }
 
+model Suggestion {
+  id        Int      @id @default(autoincrement())
+  text      String
+  ipAddress String
+  userAgent String
+  createdAt DateTime @default(now())
+}
+
 enum VoteType {
   LIKE
   DISLIKE

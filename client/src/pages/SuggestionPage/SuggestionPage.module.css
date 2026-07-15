@@ -1,0 +1,46 @@
+.page {
+  padding-top: 1.25rem;
+  padding-bottom: 3rem;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: 1rem;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  background: #f9fafb;
+  color: #16241c;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  -webkit-appearance: none;
+}
+
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(10, 59, 36, 0.12);
+  background: #fff;
+}
+
+.textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

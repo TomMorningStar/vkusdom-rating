@@ -7,6 +7,7 @@ import {
 } from "../controllers/employeeController";
 import { requireAdmin } from "../middlewares/requireAdmin";
 import { uploadEmployeePhoto } from "../middlewares/uploadEmployeePhoto";
+import { suggestionController } from "../controllers/suggestionController";
 
 export const apiRouter = Router();
 
@@ -17,6 +18,7 @@ apiRouter.get("/employees", employeeController.list);
 apiRouter.get("/employees/:id", employeeController.getById);
 apiRouter.get("/employees/:id/comments", employeeController.getComments);
 apiRouter.post("/employees/:id/vote", employeeController.vote);
+apiRouter.post("/suggestions", suggestionController.create);
 
 const adminRouter = Router();
 adminRouter.use(requireAdmin);

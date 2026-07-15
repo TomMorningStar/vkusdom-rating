@@ -3,8 +3,6 @@
   padding-bottom: 3rem;
 }
 
-.logo {
-  display: block;
-  height: 48px;
-  width: auto;
+.header {
+  margin-bottom: 1rem;
 }
