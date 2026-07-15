@@ -11,8 +11,8 @@ import {
 	downloadEmployeeQr,
 	downloadEmployeesListQr,
 	downloadEmployeesQrZip,
-	getEmployeeQrUrl,
 } from '../../utils/qr';
+import avatarFallback from '../../assets/avatar-alt.jpg';
 import styles from './AdminPage.module.css';
 
 const emptyForm: EmployeeFormPayload = {
@@ -283,27 +283,24 @@ export function AdminPage() {
 					<table className={styles.table}>
 						<thead>
 							<tr>
+								<th></th>
 								<th>ФИО</th>
 								<th>Должность</th>
-								<th>QR</th>
 								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							{employees.map(employee => (
 								<tr key={employee.id}>
+									<td>
+										<img
+											src={employee.photoUrl || avatarFallback}
+											alt=''
+											className={styles.avatar}
+										/>
+									</td>
 									<td>{employee.fullName}</td>
 									<td>{employee.position}</td>
-									<td>
-										<a
-											className={styles.qrLink}
-											href={getEmployeeQrUrl(employee.id)}
-											target='_blank'
-											rel='noreferrer'
-										>
-											/employee/{employee.id}
-										</a>
-									</td>
 									<td>
 										<div className={styles.actions}>
 											<button
