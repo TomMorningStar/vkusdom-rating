@@ -3,6 +3,7 @@ import { isAuthenticated } from "../../api/auth";
 import { submitSuggestion } from "../../api/suggestions";
 import { BrandLogo } from "../../components/BrandLogo";
 import { Header } from "../../components/Header";
+import { compressImageFile } from "../../utils/compressImage";
 import styles from "./SuggestionPage.module.css";
 
 const MAX_PHOTO_SIZE = 10 * 1024 * 1024;
@@ -33,7 +34,7 @@ export function SuggestionPage() {
     };
   }, [photoPreview]);
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -43,7 +44,9 @@ export function SuggestionPage() {
       return;
     }
 
-    if (file.size > MAX_PHOTO_SIZE) {
+    const prepared = await compressImageFile(file);
+
+    if (prepared.size > MAX_PHOTO_SIZE) {
       setError("Фото должно быть не больше 10 МБ");
       setFileInputKey((k) => k + 1);
       return;
@@ -54,8 +57,8 @@ export function SuggestionPage() {
     }
 
     setError("");
-    setPhoto(file);
-    setPhotoPreview(URL.createObjectURL(file));
+    setPhoto(prepared);
+    setPhotoPreview(URL.createObjectURL(prepared));
   }
 
   function handleRemovePhoto() {

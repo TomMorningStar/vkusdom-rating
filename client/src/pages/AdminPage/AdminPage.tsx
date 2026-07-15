@@ -13,6 +13,7 @@ import {
 	downloadEmployeesQrZip,
 } from '../../utils/qr';
 import avatarFallback from '../../assets/avatar-alt.jpg';
+import { compressImageFile } from '../../utils/compressImage';
 import styles from './AdminPage.module.css';
 
 const emptyForm: EmployeeFormPayload = {
@@ -94,6 +95,12 @@ export function AdminPage() {
 		} finally {
 			setSaving(false);
 		}
+	}
+
+	async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+		const file = e.target.files?.[0] ?? null;
+		const prepared = file ? await compressImageFile(file) : null;
+		setForm(current => ({ ...current, photo: prepared }));
 	}
 
 	function startEdit(employee: AdminEmployee) {
@@ -236,10 +243,8 @@ export function AdminPage() {
 								key={fileInputKey}
 								className={styles.fileInput}
 								type='file'
-								accept='image/jpeg,image/png,image/webp'
-								onChange={e =>
-									setForm({ ...form, photo: e.target.files?.[0] ?? null })
-								}
+								accept='image/*'
+								onChange={handlePhotoChange}
 							/>
 						</label>
 						<span className={styles.fileName}>
@@ -247,7 +252,7 @@ export function AdminPage() {
 								? form.photo.name
 								: editingId
 									? 'Если не выбрать новое фото, останется текущее'
-									: 'JPG, PNG или WEBP до 5 МБ'}
+									: 'JPG, PNG, WEBP или HEIC до 5 МБ'}
 						</span>
 					</div>
 					<div className={styles.formActions}>
