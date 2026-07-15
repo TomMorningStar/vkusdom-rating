@@ -123,7 +123,7 @@ export function SuggestionPage() {
                     key={fileInputKey}
                     className={styles.fileInput}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
+                    accept="image/*"
                     onChange={handleFileChange}
                     disabled={submitting}
                   />
