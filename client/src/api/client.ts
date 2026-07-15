@@ -35,7 +35,17 @@ export async function apiFetch<T>(path: string, options: FetchOptions = {}): Pro
     ...rest,
   });
 
-  const json = (await response.json()) as ApiSuccess<T> | ApiError;
+  let json: ApiSuccess<T> | ApiError;
+  try {
+    json = (await response.json()) as ApiSuccess<T> | ApiError;
+  } catch {
+    // Non-JSON body: nginx error pages (e.g. 413 when the upload exceeds
+    // client_max_body_size) never reach the API's JSON envelope
+    if (response.status === 413) {
+      throw new ApiRequestError("Файл слишком большой. Фото должно быть не больше 10 МБ");
+    }
+    throw new ApiRequestError(`Ошибка сервера (${response.status}). Попробуйте ещё раз`);
+  }
 
   if (json.success === false) {
     throw new ApiRequestError(json.message);
