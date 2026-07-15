@@ -9,7 +9,15 @@ const allowedImageExtensions = new Map([
   ["image/jpeg", ".jpg"],
   ["image/png", ".png"],
   ["image/webp", ".webp"],
+  ["image/heic", ".heic"],
+  ["image/heif", ".heif"],
 ]);
+
+const heifBrands = ["heic", "heix", "hevc", "hevx", "heim", "heis", "hevm", "hevs", "mif1", "msf1"];
+const isHeifContainer = (buf: Buffer) =>
+  buf.length >= 12 &&
+  buf.subarray(4, 8).toString("ascii") === "ftyp" &&
+  heifBrands.includes(buf.subarray(8, 12).toString("ascii"));
 
 const magicNumberCheckers: Record<string, (buf: Buffer) => boolean> = {
   "image/jpeg": (buf) => buf.length >= 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff,
@@ -20,7 +28,22 @@ const magicNumberCheckers: Record<string, (buf: Buffer) => boolean> = {
     buf.length >= 12 &&
     buf.subarray(0, 4).toString("ascii") === "RIFF" &&
     buf.subarray(8, 12).toString("ascii") === "WEBP",
+  "image/heic": isHeifContainer,
+  "image/heif": isHeifContainer,
 };
+
+const extensionToMimeType = new Map(
+  Array.from(allowedImageExtensions, ([mimeType, ext]) => [ext, mimeType]),
+);
+const genericMimeTypes = new Set(["application/octet-stream", ""]);
+
+// Some mobile browsers report a generic mimetype for HEIC/HEIF files; fall back to the file extension.
+function resolveMimeType(file: Express.Multer.File): string | undefined {
+  if (allowedImageExtensions.has(file.mimetype)) return file.mimetype;
+  if (!genericMimeTypes.has(file.mimetype)) return undefined;
+
+  return extensionToMimeType.get(path.extname(file.originalname).toLowerCase());
+}
 
 async function matchesClaimedType(filePath: string, claimedMimeType: string): Promise<boolean> {
   const checker = magicNumberCheckers[claimedMimeType];
@@ -59,11 +82,13 @@ export function createImageUploader(params: {
       fileSize: maxSizeMb * 1024 * 1024,
     },
     fileFilter: (_req, file, cb) => {
-      if (!allowedImageExtensions.has(file.mimetype)) {
-        cb(new Error("Можно загрузить только JPG, PNG или WEBP"));
+      const resolved = resolveMimeType(file);
+      if (!resolved) {
+        cb(new Error("Можно загрузить только JPG, PNG, WEBP или HEIC"));
         return;
       }
 
+      file.mimetype = resolved;
       cb(null, true);
     },
   });
