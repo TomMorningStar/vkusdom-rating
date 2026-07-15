@@ -6,7 +6,15 @@ import { Header } from "../../components/Header";
 import styles from "./SuggestionPage.module.css";
 
 const MAX_PHOTO_SIZE = 10 * 1024 * 1024;
-const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+const ALLOWED_PHOTO_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"];
+
+function isAllowedPhoto(file: File) {
+  if (ALLOWED_PHOTO_TYPES.includes(file.type)) return true;
+  // iOS/Android browsers sometimes leave `type` empty for HEIC/HEIF files
+  const name = file.name.toLowerCase();
+  return !file.type && ALLOWED_PHOTO_EXTENSIONS.some((ext) => name.endsWith(ext));
+}
 
 export function SuggestionPage() {
   const showHeader = isAuthenticated();
@@ -29,8 +37,8 @@ export function SuggestionPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
-      setError("Можно загрузить только JPG, PNG или WEBP");
+    if (!isAllowedPhoto(file)) {
+      setError("Можно загрузить только JPG, PNG, WEBP или HEIC");
       setFileInputKey((k) => k + 1);
       return;
     }
@@ -115,7 +123,7 @@ export function SuggestionPage() {
                     key={fileInputKey}
                     className={styles.fileInput}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
                     onChange={handleFileChange}
                     disabled={submitting}
                   />
@@ -138,12 +146,12 @@ export function SuggestionPage() {
                   key={fileInputKey}
                   className={styles.fileInput}
                   type="file"
-                  accept="image/jpeg,image/png,image/webp"
+                  accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
                   onChange={handleFileChange}
                   disabled={submitting}
                 />
               </label>
-              <span className={styles.fileHint}>JPG, PNG или WEBP до 10 МБ</span>
+              <span className={styles.fileHint}>JPG, PNG, WEBP или HEIC до 10 МБ</span>
             </div>
           )}
 
