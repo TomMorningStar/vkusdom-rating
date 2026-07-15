@@ -4,8 +4,10 @@ import {
   deleteEmployeeUploadedFile,
   getEmployeePhotoUrl,
 } from "../middlewares/uploadEmployeePhoto";
+import { deleteSuggestionPhotoByUrl } from "../middlewares/uploadSuggestionPhoto";
 import { commentRepository } from "../repositories/commentRepository";
 import { employeeRepository } from "../repositories/employeeRepository";
+import { suggestionRepository } from "../repositories/suggestionRepository";
 import { isValidAdminCredentials } from "../utils/adminAuth";
 import { parseId } from "../utils/request";
 import { sendError, sendSuccess } from "../utils/response";
@@ -169,5 +171,29 @@ export const adminController = {
 
     const comment = await commentRepository.approve(id);
     sendSuccess(res, comment);
+  },
+
+  async listSuggestions(_req: Request, res: Response) {
+    const suggestions = await suggestionRepository.findAll();
+    sendSuccess(res, suggestions);
+  },
+
+  async removeSuggestion(req: Request, res: Response) {
+    const id = parseId(req.params.id);
+    if (!id) {
+      return sendError(res, "Некорректный id предложения", 400);
+    }
+
+    const existing = await suggestionRepository.findById(id);
+    if (!existing) {
+      return sendError(res, "Предложение не найдено", 404);
+    }
+
+    await suggestionRepository.delete(id);
+    if (existing.photoUrl) {
+      await deleteSuggestionPhotoByUrl(existing.photoUrl);
+    }
+
+    sendSuccess(res, { id });
   },
 };

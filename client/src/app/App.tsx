@@ -8,6 +8,7 @@ import { HomePage } from "../pages/HomePage";
 import { LoginPage } from "../pages/LoginPage";
 import { RatingPage } from "../pages/RatingPage";
 import { SuggestionPage } from "../pages/SuggestionPage";
+import { SuggestionsPage } from "../pages/SuggestionsPage";
 
 export function App() {
   return (
@@ -23,6 +24,7 @@ export function App() {
             <Route index element={<AdminPage />} />
             <Route path="rating" element={<RatingPage />} />
             <Route path="comments" element={<CommentsPage />} />
+            <Route path="suggestions" element={<SuggestionsPage />} />
           </Route>
         </Route>
 

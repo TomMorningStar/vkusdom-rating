@@ -45,6 +45,7 @@ model Comment {
 model Suggestion {
   id        Int      @id @default(autoincrement())
   text      String
+  photoUrl  String   @default("")
   ipAddress String
   userAgent String
   createdAt DateTime @default(now())

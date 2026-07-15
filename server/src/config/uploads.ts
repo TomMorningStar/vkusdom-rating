@@ -5,3 +5,4 @@ export const uploadsRoot = path.resolve(
 );
 
 export const employeeUploadsDir = path.join(uploadsRoot, "employees");
+export const suggestionUploadsDir = path.join(uploadsRoot, "suggestions");

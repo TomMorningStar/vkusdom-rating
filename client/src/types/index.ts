@@ -38,6 +38,15 @@ export interface PendingComment {
   createdAt: string;
 }
 
+export interface AdminSuggestion {
+  id: number;
+  text: string;
+  photoUrl: string;
+  ipAddress: string;
+  userAgent: string;
+  createdAt: string;
+}
+
 export interface RatingItem {
   id: number;
   fullName: string;

@@ -7,11 +7,17 @@
   margin-bottom: 1rem;
 }
 
+@media (max-width: 500px) {
+  .header {
+    margin-bottom: 0.5rem;
+  }
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .textarea {
@@ -43,4 +49,58 @@
 .textarea:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.fileField {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.fileButton {
+  cursor: pointer;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileHint {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.previewWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.preview {
+  display: block;
+  max-width: 100%;
+  max-height: 260px;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  object-fit: contain;
+}
+
+.previewActions {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.removeBtn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.removeBtn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #fff;
 }

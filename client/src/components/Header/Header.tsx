@@ -19,6 +19,16 @@ export function Header() {
 		<header className={styles.header}>
 			<div className={`container ${styles.inner}`}>
 				<img src={logo} alt='ВкусДом' className={styles.logo} />
+
+				<button
+					type='button'
+					className={`btn btn-primary ${styles.logout}`}
+					onClick={handleLogout}
+				>
+					Выйти
+				</button>
+			</div>
+			<div className={styles.innerSecond}>
 				<nav className={styles.nav}>
 					<NavLink to='/admin' end className={navLinkClassName}>
 						Админ панель
@@ -32,14 +42,10 @@ export function Header() {
 					<NavLink to='/admin/comments' className={navLinkClassName}>
 						Комментарии
 					</NavLink>
+					<NavLink to='/admin/suggestions' className={navLinkClassName}>
+						Предложения
+					</NavLink>
 				</nav>
-				<button
-					type='button'
-					className={`btn btn-primary ${styles.logout}`}
-					onClick={handleLogout}
-				>
-					Выйти
-				</button>
 			</div>
 		</header>
 	);
