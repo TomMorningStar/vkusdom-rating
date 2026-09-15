@@ -85,7 +85,10 @@ export function EmployeePage() {
 			<div className={`card ${styles.profile}`}>
 				<div className={styles.photoWrap}>
 					<img
-						src={employee.photoUrl || avatarFallback}
+						src={
+							// employee.photoUrl || avatarFallback
+							avatarFallback
+						}
 						alt={employee.fullName}
 						className={styles.photo}
 					/>
