@@ -86,8 +86,9 @@ export function EmployeePage() {
 				<div className={styles.photoWrap}>
 					<img
 						src={
-							// employee.photoUrl || avatarFallback
-							avatarFallback
+							showAdminBackLink
+								? employee.photoUrl || avatarFallback
+								: avatarFallback
 						}
 						alt={employee.fullName}
 						className={styles.photo}

@@ -5,16 +5,14 @@ import styles from "./EmployeeCard.module.css";
 
 interface Props {
   employee: EmployeeListItem;
+  showEmployeePhoto: boolean;
 }
 
-export function EmployeeCard({ employee }: Props) {
+export function EmployeeCard({ employee, showEmployeePhoto }: Props) {
   return (
     <Link to={`/employee/${employee.id}`} className={`card ${styles.card}`}>
       <img
-        src={
-          // employee.photoUrl || avatarFallback
-          avatarFallback
-        }
+        src={showEmployeePhoto ? employee.photoUrl || avatarFallback : avatarFallback}
         alt={employee.fullName}
         className={styles.photo}
       />

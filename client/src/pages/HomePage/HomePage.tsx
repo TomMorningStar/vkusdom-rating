@@ -38,7 +38,11 @@ export function HomePage() {
             </p>
             <div className="grid">
               {employees.map((employee) => (
-                <EmployeeCard key={employee.id} employee={employee} />
+                <EmployeeCard
+                  key={employee.id}
+                  employee={employee}
+                  showEmployeePhoto={showHeader}
+                />
               ))}
             </div>
           </>
